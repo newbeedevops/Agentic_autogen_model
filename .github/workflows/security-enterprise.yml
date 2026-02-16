@@ -43,6 +43,12 @@ jobs:
       - name: Create reports directory
         run: mkdir -p "${REPORTS_DIR}"
 
+      # Install jq/curl ONCE for everything that needs it
+      - name: Install system deps (jq, curl)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq curl
+
       # -------------------------
       # Semgrep
       # -------------------------
@@ -71,7 +77,7 @@ jobs:
       - name: Cache Trivy DB
         uses: actions/cache@v4
         with:
-          path: ~/.cache/trivy
+          path: ${{ env.TRIVY_CACHE_DIR }}
           key: trivy-db-${{ runner.os }}-${{ hashFiles('Order-app-main/package-lock.json') }}
           restore-keys: |
             trivy-db-${{ runner.os }}-
@@ -84,18 +90,18 @@ jobs:
 
       - name: Run Trivy FS Scan
         run: |
-          trivy fs --cache-dir ~/.cache/trivy --format json \
+          trivy fs --cache-dir "${TRIVY_CACHE_DIR}" --format json \
             --output "${REPORTS_DIR}/trivy_fs.json" "${APP_DIR}" \
           || echo '{}' > "${REPORTS_DIR}/trivy_fs.json"
 
       # -------------------------
-      # Trivy Image (correct Dockerfile path)
+      # Trivy Image (Dockerfile exists at ./app/Dockerfile)
       # -------------------------
       - name: Run Trivy Image Scan
         run: |
           if [ -f "app/Dockerfile" ]; then
             docker build -t app-scan ./app
-            trivy image --cache-dir ~/.cache/trivy --format json \
+            trivy image --cache-dir "${TRIVY_CACHE_DIR}" --format json \
               --output "${REPORTS_DIR}/trivy_image.json" app-scan \
             || echo '{}' > "${REPORTS_DIR}/trivy_image.json"
           else
@@ -103,16 +109,15 @@ jobs:
           fi
 
       # -------------------------
-      # Gitleaks
+      # Gitleaks (jq/curl already installed)
       # -------------------------
       - name: Install Gitleaks
         run: |
-          sudo apt-get update
-          sudo apt-get install -y jq curl
           VERSION=$(curl -s https://api.github.com/repos/gitleaks/gitleaks/releases/latest | jq -r .tag_name)
           curl -sL "https://github.com/gitleaks/gitleaks/releases/download/${VERSION}/gitleaks_${VERSION#v}_linux_x64.tar.gz" \
             | tar -xz
           sudo mv gitleaks /usr/local/bin/
+          gitleaks version
 
       - name: Run Gitleaks
         run: |
@@ -121,24 +126,50 @@ jobs:
           || echo '[]' > "${REPORTS_DIR}/gitleaks.json"
 
       # -------------------------
-      # Conftest (k8s + policy only, terraform uses tfplan.json)
+      # Conftest + Terraform
       # -------------------------
-      - name: Install Conftest + Terraform
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.8.5
+          terraform_wrapper: false
+
+      - name: Cache Terraform plugins
+        uses: actions/cache@v4
+        with:
+          path: |
+            terraform/.terraform
+            ~/.terraform.d/plugin-cache
+          key: terraform-${{ runner.os }}-${{ hashFiles('terraform/**/*.tf') }}
+          restore-keys: |
+            terraform-${{ runner.os }}-
+
+      - name: Install Conftest
         run: |
-          sudo apt-get update
-          sudo apt-get install -y jq curl terraform
           VERSION=$(curl -s https://api.github.com/repos/open-policy-agent/conftest/releases/latest | jq -r .tag_name)
           curl -sL "https://github.com/open-policy-agent/conftest/releases/download/${VERSION}/conftest_${VERSION#v}_Linux_x86_64.tar.gz" \
             | tar -xz
           sudo mv conftest /usr/local/bin/
+          conftest --version
+          terraform version
 
       - name: Generate Terraform plan JSON (if terraform/ exists)
         run: |
           if [ -d terraform ]; then
+            mkdir -p ~/.terraform.d/plugin-cache
+            cat > ~/.terraformrc <<'EOF'
+          plugin_cache_dir = "$HOME/.terraform.d/plugin-cache"
+          EOF
+
             cd terraform
-            terraform init -input=false
+            terraform init -input=false || true
             terraform plan -out=plan.out -input=false || true
-            terraform show -json plan.out > ../"${REPORTS_DIR}/tfplan.json" || echo '{}' > ../"${REPORTS_DIR}/tfplan.json"
+
+            if [ -f plan.out ]; then
+              terraform show -json plan.out > ../"${REPORTS_DIR}/tfplan.json" || echo '{}' > ../"${REPORTS_DIR}/tfplan.json"
+            else
+              echo '{}' > ../"${REPORTS_DIR}/tfplan.json"
+            fi
             cd ..
           else
             echo '{}' > "${REPORTS_DIR}/tfplan.json"
@@ -148,7 +179,6 @@ jobs:
         run: |
           set -o pipefail
 
-          # Conftest for Kubernetes YAML + policy folder (NOT terraform HCL)
           targets=""
           for d in k8s policy; do
             [ -d "$d" ] && targets="$targets $d"
@@ -164,7 +194,6 @@ jobs:
             echo "No conftest targets found." > "${REPORTS_DIR}/conftest.err"
           fi
 
-          # Terraform plan policy
           if [ -d policy/terraform ] && [ -f "${REPORTS_DIR}/tfplan.json" ]; then
             conftest test "${REPORTS_DIR}/tfplan.json" -p policy/terraform --output json \
               > "${REPORTS_DIR}/conftest_tf.json" \
