@@ -1,0 +1,58 @@
+{
+  "findings": {
+    "semgrep": [
+      {
+        "file": "Order-app-main/public/index.html",
+        "line": 44,
+        "severity": "medium",
+        "rule_id": "HTML.SECURITY.AUDIT.MISSING-INTEGRITY.MISSING-INTEGRITY",
+        "message": "This tag is missing an 'integrity' subresource integrity attribute. The 'integrity' attribute allows for the browser to verify that externally hosted files (for example from a CDN) are delivered without unexpected manipulation. Without this attribute, if an attacker can modify the externally hosted resource, this could lead to XSS and other types of attacks. To prevent this, include the base64-encoded cryptographic hash of the resource (file) you’re telling the browser to fetch in the 'integrity' attribute for all externally hosted files.",
+        "snippet": "requires login"
+      },
+      {
+        "file": "app/insecure_eval.py",
+        "line": 2,
+        "severity": "medium",
+        "rule_id": "PYTHON.LANG.SECURITY.AUDIT.EVAL-DETECTED.EVAL-DETECTED",
+        "message": "Detected the use of eval(). eval() can be dangerous if used to evaluate dynamic content. If this content can be input from outside the program, this may be a code injection vulnerability. Ensure evaluated content is not definable by external sources.",
+        "snippet": "requires login"
+      },
+      {
+        "file": "creater_pr.py",
+        "line": 17,
+        "severity": "high",
+        "rule_id": "PYTHON.LANG.SECURITY.AUDIT.SUBPROCESS-SHELL-TRUE.SUBPROCESS-SHELL-TRUE",
+        "message": "Found 'subprocess' function 'check_call' with 'shell=True'. This is dangerous because this call will spawn the command using a shell process. Doing so propagates current shell settings and variables, which makes it much easier for a malicious actor to execute commands. Use 'shell=False' instead.",
+        "snippet": "requires login"
+      },
+      {
+        "file": "k8s/deployment.yaml",
+        "line": 18,
+        "severity": "medium",
+        "rule_id": "YAML.KUBERNETES.SECURITY.ALLOW-PRIVILEGE-ESCALATION.ALLOW-PRIVILEGE-ESCALATION",
+        "message": "In Kubernetes, each pod runs in its own isolated environment with its own set of security policies. However, certain container images may contain `setuid` or `setgid` binaries that could allow an attacker to perform privilege escalation and gain access to sensitive resources. To mitigate this risk, it's recommended to add a `securityContext` to the container in the pod, with the parameter `allowPrivilegeEscalation` set to `false`. This will prevent the container from running any privileged processes and limit the impact of any potential attacks. By adding the `allowPrivilegeEscalation` parameter to your the `securityContext`, you can help to ensure that your containerized applications are more secure and less vulnerable to privilege escalation attacks.",
+        "snippet": "requires login"
+      }
+    ],
+    "trivy_fs": [],
+    "trivy_image": [],
+    "tfsec": [],
+    "gitleaks": [],
+    "conftest": [],
+    "zap": [],
+    "_meta": {
+      "count": 4,
+      "flat_count": 4,
+      "by_tool": {
+        "semgrep": 4,
+        "trivy_fs": 0,
+        "trivy_image": 0,
+        "tfsec": 0,
+        "gitleaks": 0,
+        "conftest": 0,
+        "zap": 0
+      },
+      "parse_errors": 0
+    }
+  }
+}
