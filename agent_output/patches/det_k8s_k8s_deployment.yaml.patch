@@ -1,0 +1,17 @@
+--- a/k8s/deployment.yaml
++++ b/k8s/deployment.yaml
+@@ -16,5 +16,6 @@
+       - name: app
+
+         image: nginx:latest
+
+-        securityContext: {}
+
++        securityContext:
+
++          allowPrivilegeEscalation: false
+
+         resources:
+
+           limits:
+

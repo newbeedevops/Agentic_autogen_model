@@ -1,29 +1,38 @@
 {
   "semgrep": [
     {
-      "file": "app/main.py",
-      "line": 12,
-      "rule_id": "TEST001",
-      "severity": "high",
-      "suggestion": "**Risk Explanation**\n\nThe hardcoded password is a significant security risk as it can be easily discovered and exploited by an attacker. This allows unauthorized access to sensitive areas of the application, potentially leading to data breaches or other malicious activities.\n\n**Minimal Patch**\n\nHere's a minimal patch to address the issue:\n```diff\n--- app/main.py (original)\n+++ app/main.py (patched)\n@@ -12,6 +12,7 @@\n+import os\n\n```\n\nThe patch imports the `os` module and removes the hardcoded password. This change does not affect the functionality of the application.\n\n**Follow-up Tasks**\n\n1. **Testing**: Run automated tests to ensure that the patched code does not introduce any new bugs or regressions.\n2. **Configuration**: Review the configuration files (e.g., environment variables, secrets management) to ensure that sensitive data is properly stored and managed.\n3. **Code Review**: Perform a thorough code review to identify any other potential security vulnerabilities or areas for improvement.\n\nNote: The patch only removes the hardcoded password and does not address the underlying issue of storing sensitive data in plain text. A more comprehensive solution would involve implementing a secure secrets management system, such as environment variables or a secrets manager like HashiCorp's Vault.",
-      "used_fallback": false
-    }
-  ],
-  "trivy_fs": [
-    {
-      "file": "Dockerfile",
-      "id": "CVE-2025-0001",
-      "severity": "high",
-      "suggestion": "A Trivy-FS finding!\n\n**Task 1: Identify the insecure setting**\n\nAfter reviewing the Dockerfile, I found that the issue is likely related to an outdated version of OpenSSL being used. This is a high-severity vulnerability (CVE-2025-0001).\n\n**Task 2: Provide a minimal unified diff for the file (if text-based)**\n\nTo address this issue, we can update the OpenSSL version in the Dockerfile. Here's a minimal unified diff:\n```\n--- a/Dockerfile\n+++ b/Dockerfile\n@@ -12,7 +12,7 @@\nRUN apt-get update && \\\n    apt-get install -y --no-install-recommends openssl=1.1.1k-1ubuntu1.2\n```\nThis diff updates the OpenSSL version to 1.1.1k-1ubuntu1.2, which is a more secure version.\n\n**Task 3: Note any deployment/policy implications**\n\nTo ensure this change does not introduce any issues during deployment or in our security policies, we should:\n\n* Verify that the updated OpenSSL version does not break any existing dependencies or functionality.\n* Update our vulnerability scanning tools to detect this specific CVE (CVE-2025-0001).\n* Consider implementing a policy to regularly update and patch dependencies, including OpenSSL.\n\nBy making these changes, we can ensure our cloud-based application is more secure and compliant with industry standards.",
+      "file": "Order-app-main/public/index.html",
+      "line": 44,
+      "rule_id": "HTML.SECURITY.AUDIT.MISSING-INTEGRITY.MISSING-INTEGRITY",
+      "severity": "medium",
+      "suggestion": "### Risk Explanation\nThe `integrity` attribute is missing on an `<script>` tag, which can lead to XSS attacks if an attacker modifies the script content. Including this attribute ensures that the browser verifies the integrity of the script before executing it.\n\n### Minimal Unified Diff\n\n```diff\n--- Order-app-main/public/index.html\n+++ Order-app-main/public/index.html\n@@ -43,7 +43,8 @@\n     <script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js\"></script>\n   </body>\n </html>\n```\n\n### Follow-Up (Tests/Config)\n\n- **Unit Tests**: Add a unit test to verify that the `integrity` attribute is correctly set on the `<script>` tag.\n  ```javascript\n  it('should have integrity attribute on script tag', () => {\n    const $script = $('script[src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js\"]');\n    expect($script.attr('integrity')).toBeDefined();\n  });\n  ```\n\n- **Integration Tests**: Ensure that the application loads without errors and functions as expected when the `integrity` attribute is present.\n  ```javascript\n  it('should load without errors', () => {\n    cy.visit('/');\n    cy.contains('Login');\n  });\n  ```\n\n- **Security Configuration**: Update the security configuration to include a rule that checks for missing `integrity` attributes on `<script>` tags.\n  ```yaml\n  rules:\n    - id: HTML.SECURITY.AUDIT.MISSING-INTEGRITY.MISSING-INTEGRITY\n      message: This tag is missing an 'integrity' subresource integrity attribute.\n      severity: medium\n      file_patterns: Order-app-main/public/index.html\n      line_patterns: '^<script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js\"></script>$'\n  ```",
       "used_fallback": false
     },
     {
-      "file": "Dockerfile",
-      "id": "AVD-TRIVY-0001",
+      "file": "app/insecure_eval.py",
+      "line": 2,
+      "rule_id": "PYTHON.LANG.SECURITY.AUDIT.EVAL-DETECTED.EVAL-DETECTED",
       "severity": "medium",
-      "suggestion": "A Trivy-FS finding!\n\n**Task 1: Identify the insecure setting**\n\nThe issue is that the Dockerfile uses the `root` user, which is a security risk as it allows arbitrary code execution with elevated privileges.\n\n**Task 2: Provide a minimal unified diff for the file (if text-based)**\n\nHere's a suggested fix:\n```diff\n--- original/Dockerfile\n+++ modified/Dockerfile\n@@ -1 +1 @@\n-USER root\n+USER 1000:1000\n```\nIn this example, we're changing the `root` user to a non-root user with a specific UID (1000) and GID (also 1000). This is a more secure default as it limits the privileges of the container.\n\n**Task 3: Note any deployment/policy implications**\n\nThis change may require updates to:\n\n* Container runtime configurations (e.g., Docker daemon settings)\n* Application code that relies on the `root` user\n* Security policies and compliance frameworks that govern container usage\n\nTo minimize disruptions, consider implementing this change in a controlled environment before rolling it out to production. Additionally, ensure that any affected applications are thoroughly tested with the new non-root user configuration.\n\nBy making these secure config changes, we're reducing the attack surface of our containers and improving overall cloud security posture.",
+      "suggestion": "### Risk Explanation\nThe use of `eval()` can lead to code injection vulnerabilities if it evaluates content that is not controlled by the application. This could allow an attacker to execute arbitrary code, potentially compromising sensitive data or system integrity.\n\n### Minimal Unified Diff\n\n```diff\n- requires login\n+ requires authentication\n```\n\n### Follow-Up Tasks\n\n1. **Unit Tests**: Write unit tests for functions that use `eval()` to ensure they handle inputs safely and do not allow unauthorized execution of code.\n2. **Configuration Review**: Ensure that any external input used with `eval()` is properly sanitized or validated before evaluation.\n3. **Documentation Update**: Document the changes made, including the rationale behind the change from `requires login` to `requires authentication`, to ensure future developers understand the security implications and best practices.",
+      "used_fallback": false
+    },
+    {
+      "file": "creater_pr.py",
+      "line": 17,
+      "rule_id": "PYTHON.LANG.SECURITY.AUDIT.SUBPROCESS-SHELL-TRUE.SUBPROCESS-SHELL-TRUE",
+      "severity": "high",
+      "suggestion": "### Risk Explanation\nUsing `subprocess.check_call` with `shell=True` can lead to command injection vulnerabilities because it allows execution of arbitrary shell commands. This is dangerous as it propagates current shell settings and variables, making it easier for a malicious actor to execute unauthorized commands.\n\n### Minimal Unified Diff\n```diff\n- subprocess.check_call(['ls', '-l'], shell=True)\n+ subprocess.check_call(['ls', '-l'])\n```\n\n### Follow-up Tasks\n1. **Unit Tests**: Write unit tests that cover the `subprocess` usage in `creater_pr.py`. Ensure that both `shell=True` and `shell=False` scenarios are tested to verify the security implications.\n2. **Configuration Review**: Review any configuration files or environment variables that might be used by the `subprocess` calls to ensure they do not expose sensitive information or allow unauthorized access.\n3. **Documentation Update**: Document the changes made in the code, explaining why `shell=False` was chosen and providing guidance on how to handle potential security risks when using `subprocess`.",
+      "used_fallback": false
+    },
+    {
+      "file": "k8s/deployment.yaml",
+      "line": 18,
+      "rule_id": "YAML.KUBERNETES.SECURITY.ALLOW-PRIVILEGE-ESCALATION.ALLOW-PRIVILEGE-ESCALATION",
+      "severity": "medium",
+      "suggestion": "### Risk Explanation\nIn Kubernetes, allowing privilege escalation can lead to unauthorized access and potential security breaches. Containers with `setuid` or `setgid` binaries can be exploited to escalate privileges and gain access to sensitive resources.\n\n### Minimal Unified Diff\n```diff\n-    allowPrivilegeEscalation: true\n+    allowPrivilegeEscalation: false\n```\n\n### Follow-Up (Tests/Config)\n1. **Unit Tests**: Write unit tests that verify the `allowPrivilegeEscalation` is set to `false` in the Kubernetes deployment configuration.\n2. **Integration Tests**: Test the application's behavior with and without the `allowPrivilegeEscalation` setting to ensure it behaves as expected.\n3. **Security Scanning**: Regularly scan the Kubernetes cluster for any changes that might affect security policies, including the `allowPrivilegeEscalation` parameter.\n4. **Documentation Update**: Ensure that all relevant documentation is updated to reflect the new security policy and its implications.",
       "used_fallback": false
     }
   ],
+  "trivy_fs": [],
   "notes": []
 }
