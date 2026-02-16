@@ -139,7 +139,7 @@ def _canonicalize_path(repo: Path, reported: str) -> str:
     return rp  # last resort (still recorded, but may not exist)
 
 
-def _build_targets_json(repo: Path, findings_grouped: dict) -> List[str]:
+def _build_targets_json(repo: Path, findings_grouped: dict) -> list[str]:
     targets: List[str] = []
     if not isinstance(findings_grouped, dict):
         return targets

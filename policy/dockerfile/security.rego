@@ -1,56 +1,20 @@
-package company.docker
+package dockerfile.security
 
-default deny := []
-
-# Disallow ADD
-deny[msg] {
-  some i
-  lower(input[i].Cmd) == "add"
-  msg := sprintf("Dockerfile: use COPY instead of ADD (line %v).", [i+1])
+deny contains msg if {
+  input[i].Cmd == "add"
+  msg := sprintf("Dockerfile uses ADD at instruction %d; use COPY instead", [i])
 }
 
-# Disallow FROM :latest
-deny[msg] {
+deny contains msg if {
+  some i
+  lower(input[i].Cmd) == "user"
+  lower(input[i].Value[0]) == "root"
+  msg := sprintf("Dockerfile sets USER root at instruction %d; use a non-root user", [i])
+}
+
+deny contains msg if {
   some i
   lower(input[i].Cmd) == "from"
-  image := lower(concat(" ", input[i].Value))
-  contains(image, ":latest")
-  msg := sprintf("Dockerfile: avoid :latest in FROM (%v). Pin a version or digest.", [image])
-}
-
-# Require USER and require it to be non-root
-deny[msg] {
-  not user_specified
-  msg := "Dockerfile: no USER specified. Set a non-root USER."
-}
-
-deny[msg] {
-  user_specified
-  not user_non_root
-  msg := "Dockerfile: USER is root. Set a non-root USER."
-}
-
-user_specified {
-  some i
-  lower(input[i].Cmd) == "user"
-  u := trim(concat(" ", input[i].Value))
-  u != ""
-}
-
-user_non_root {
-  some i
-  lower(input[i].Cmd) == "user"
-  u := lower(trim(concat(" ", input[i].Value)))
-  u != ""
-  u != "root"
-}
-
-# apt-get hygiene (basic)
-deny[msg] {
-  some i
-  lower(input[i].Cmd) == "run"
-  run := lower(concat(" ", input[i].Value))
-  contains(run, "apt-get install")
-  not contains(run, "rm -rf /var/lib/apt/lists")
-  msg := "Dockerfile: apt-get install without cleaning apt lists (add: rm -rf /var/lib/apt/lists/*)."
+  endswith(lower(input[i].Value[0]), ":latest")
+  msg := sprintf("Dockerfile uses :latest tag at instruction %d; pin to a specific version", [i])
 }

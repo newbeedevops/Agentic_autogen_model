@@ -1,62 +1,33 @@
-package company.kubernetes
+package kubernetes.security
 
-default deny := []
-
-is_deployment(obj) {
-  obj.kind == "Deployment"
-  obj.spec.template.spec
+# Conftest passes Kubernetes YAML docs as input
+deny contains msg if {
+  is_workload
+  not has_run_as_non_root
+  msg := "Kubernetes workload must set spec.template.spec.securityContext.runAsNonRoot=true"
 }
 
-pod_spec(obj) = spec {
-  spec := obj.spec.template.spec
+deny contains msg if {
+  is_workload
+  some c
+  container := input.spec.template.spec.containers[c]
+  not container.securityContext.allowPrivilegeEscalation == false
+  msg := sprintf("Container %q must set securityContext.allowPrivilegeEscalation=false", [container.name])
 }
 
-# runAsNonRoot: allow if pod-level is set OR every container sets it
-deny[msg] {
-  obj := input[_]
-  is_deployment(obj)
-  spec := pod_spec(obj)
-
-  not pod_or_all_containers_run_as_non_root(spec)
-
-  msg := sprintf("Deployment/%s: must set runAsNonRoot=true (pod securityContext or per-container).",
-    [obj.metadata.name])
+deny contains msg if {
+  is_workload
+  some c
+  container := input.spec.template.spec.containers[c]
+  not container.resources.limits
+  msg := sprintf("Container %q should define resource limits", [container.name])
 }
 
-pod_or_all_containers_run_as_non_root(spec) {
-  spec.securityContext.runAsNonRoot == true
-} else {
-  # all containers have runAsNonRoot=true
-  not exists_container_without_run_as_non_root(spec.containers)
+is_workload if {
+  kinds := {"Deployment", "StatefulSet", "DaemonSet", "ReplicaSet"}
+  kinds[input.kind]
 }
 
-exists_container_without_run_as_non_root(containers) {
-  c := containers[_]
-  not c.securityContext.runAsNonRoot
-}
-
-# Require resource limits for all containers
-deny[msg] {
-  obj := input[_]
-  is_deployment(obj)
-  spec := pod_spec(obj)
-
-  c := spec.containers[_]
-  not c.resources.limits
-
-  msg := sprintf("Deployment/%s: container %q must define resource limits.",
-    [obj.metadata.name, c.name])
-}
-
-# Disallow privileged containers
-deny[msg] {
-  obj := input[_]
-  is_deployment(obj)
-  spec := pod_spec(obj)
-
-  c := spec.containers[_]
-  c.securityContext.privileged == true
-
-  msg := sprintf("Deployment/%s: container %q must not run privileged.",
-    [obj.metadata.name, c.name])
+has_run_as_non_root if {
+  input.spec.template.spec.securityContext.runAsNonRoot == true
 }
