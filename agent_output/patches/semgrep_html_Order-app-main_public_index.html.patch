@@ -1,0 +1,25 @@
+--- a/Order-app-main/public/index.html
++++ b/Order-app-main/public/index.html
+@@ -43,9 +43,9 @@
+ 
+
+ <script
+
+     src="https://www.datadoghq-browser-agent.com/us1/v5/datadog-rum.js"
+
+-    type="text/javascript">
+
++    type="text/javascript" integrity="sha384-TODO-SRI-HASH" crossorigin="anonymous">
+
+ </script>
+
+-<script>
+
++<script integrity="sha384-TODO-SRI-HASH" crossorigin="anonymous">
+
+     window.DD_RUM && window.DD_RUM.init({
+
+       clientToken: 'pubbd74b441c15c55c5dbdf856b95950f1b',
+
+       applicationId: 'a4287659-c3e3-4680-aa99-1a9d2644d9c6',
+

@@ -1,7 +1,9 @@
-app\Dockerfile
-k8s\deployment.yaml
-terraform\main.tf
+PATCHES EMITTED:
+agent_output/patches/semgrep_html_Order-app-main_public_index.html.patch
+agent_output/patches/semgrep_eval_app_insecure_eval.py.patch
+agent_output/patches/semgrep_subproc_creater_pr.py.patch
 
-Dockerfile: ADD→COPY . → /app
-Dockerfile: Ensured USER appuser (non-root)
-Terraform: replaced world-open CIDR with allowed CIDR
+NOTES:
+Semgrep quick: added integrity placeholder to <script> in Order-app-main/public/index.html
+Semgrep quick: replaced eval(...) with ast.literal_eval(...) in app/insecure_eval.py
+Semgrep quick: hardened subprocess(shell) usage in creater_pr.py
