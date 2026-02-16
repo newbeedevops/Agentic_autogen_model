@@ -1,0 +1,8 @@
+{
+  "targets": [
+    "Order-app-main/public/index.html",
+    "app/insecure_eval.py",
+    "creater_pr.py",
+    "k8s/deployment.yaml"
+  ]
+}

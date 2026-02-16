@@ -1,0 +1,284 @@
+{
+  "findings": [
+    {
+      "source": "semgrep",
+      "id": "HTML.SECURITY.AUDIT.MISSING-INTEGRITY.MISSING-INTEGRITY",
+      "rule_id": "HTML.SECURITY.AUDIT.MISSING-INTEGRITY.MISSING-INTEGRITY",
+      "title": "This tag is missing an 'integrity' subresource integrity attribute. The 'integrity' attribute allows for the browser to verify that externally hosted files (for example from a CDN) are delivered without unexpected manipulation. Without this attribute, if an attacker can modify the externally hosted resource, this could lead to XSS and other types of attacks. To prevent this, include the base64-encoded cryptographic hash of the resource (file) you’re telling the browser to fetch in the 'integrity' attribute for all externally hosted files.",
+      "summary": "This tag is missing an 'integrity' subresource integrity attribute. The 'integrity' attribute allows for the browser to verify that externally hosted files (for example from a CDN) are delivered without unexpected manipulation. Without this attribute, if an attacker can modify the externally hosted resource, this could lead to XSS and other types of attacks. To prevent this, include the base64-encoded cryptographic hash of the resource (file) you’re telling the browser to fetch in the 'integrity' attribute for all externally hosted files.",
+      "severity": "medium",
+      "tool": "semgrep",
+      "message": "This tag is missing an 'integrity' subresource integrity attribute. The 'integrity' attribute allows for the browser to verify that externally hosted files (for example from a CDN) are delivered without unexpected manipulation. Without this attribute, if an attacker can modify the externally hosted resource, this could lead to XSS and other types of attacks. To prevent this, include the base64-encoded cryptographic hash of the resource (file) you’re telling the browser to fetch in the 'integrity' attribute for all externally hosted files.",
+      "location": "Order-app-main/public/index.html:44",
+      "file": "Order-app-main/public/index.html",
+      "line": 44,
+      "snippet": "requires login",
+      "category": "code",
+      "raw": {
+        "check_id": "html.security.audit.missing-integrity.missing-integrity",
+        "path": "Order-app-main/public/index.html",
+        "start": {
+          "line": 44,
+          "col": 1,
+          "offset": 1914
+        },
+        "end": {
+          "line": 47,
+          "col": 10,
+          "offset": 2031
+        },
+        "extra": {
+          "message": "This tag is missing an 'integrity' subresource integrity attribute. The 'integrity' attribute allows for the browser to verify that externally hosted files (for example from a CDN) are delivered without unexpected manipulation. Without this attribute, if an attacker can modify the externally hosted resource, this could lead to XSS and other types of attacks. To prevent this, include the base64-encoded cryptographic hash of the resource (file) you’re telling the browser to fetch in the 'integrity' attribute for all externally hosted files.",
+          "metadata": {
+            "category": "security",
+            "technology": [
+              "html"
+            ],
+            "cwe": [
+              "CWE-353: Missing Support for Integrity Check"
+            ],
+            "owasp": [
+              "A08:2021 - Software and Data Integrity Failures",
+              "A08:2025 - Software or Data Integrity Failures"
+            ],
+            "confidence": "LOW",
+            "references": [
+              "https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures"
+            ],
+            "subcategory": [
+              "audit"
+            ],
+            "likelihood": "LOW",
+            "impact": "LOW",
+            "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+            "vulnerability_class": [
+              "Cryptographic Issues"
+            ],
+            "source": "https://semgrep.dev/r/html.security.audit.missing-integrity.missing-integrity",
+            "shortlink": "https://sg.run/krXA"
+          },
+          "severity": "WARNING",
+          "fingerprint": "requires login",
+          "lines": "requires login",
+          "validation_state": "NO_VALIDATOR",
+          "engine_kind": "OSS"
+        }
+      }
+    },
+    {
+      "source": "semgrep",
+      "id": "PYTHON.LANG.SECURITY.AUDIT.EVAL-DETECTED.EVAL-DETECTED",
+      "rule_id": "PYTHON.LANG.SECURITY.AUDIT.EVAL-DETECTED.EVAL-DETECTED",
+      "title": "Detected the use of eval(). eval() can be dangerous if used to evaluate dynamic content. If this content can be input from outside the program, this may be a code injection vulnerability. Ensure evaluated content is not definable by external sources.",
+      "summary": "Detected the use of eval(). eval() can be dangerous if used to evaluate dynamic content. If this content can be input from outside the program, this may be a code injection vulnerability. Ensure evaluated content is not definable by external sources.",
+      "severity": "medium",
+      "tool": "semgrep",
+      "message": "Detected the use of eval(). eval() can be dangerous if used to evaluate dynamic content. If this content can be input from outside the program, this may be a code injection vulnerability. Ensure evaluated content is not definable by external sources.",
+      "location": "app/insecure_eval.py:2",
+      "file": "app/insecure_eval.py",
+      "line": 2,
+      "snippet": "requires login",
+      "category": "code",
+      "raw": {
+        "check_id": "python.lang.security.audit.eval-detected.eval-detected",
+        "path": "app/insecure_eval.py",
+        "start": {
+          "line": 2,
+          "col": 12,
+          "offset": 26
+        },
+        "end": {
+          "line": 2,
+          "col": 22,
+          "offset": 36
+        },
+        "extra": {
+          "message": "Detected the use of eval(). eval() can be dangerous if used to evaluate dynamic content. If this content can be input from outside the program, this may be a code injection vulnerability. Ensure evaluated content is not definable by external sources.",
+          "metadata": {
+            "source-rule-url": "https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b307-eval",
+            "cwe": [
+              "CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')"
+            ],
+            "owasp": [
+              "A03:2021 - Injection",
+              "A05:2025 - Injection"
+            ],
+            "asvs": {
+              "control_id": "5.2.4 Dyanmic Code Execution Features",
+              "control_url": "https://github.com/OWASP/ASVS/blob/master/4.0/en/0x13-V5-Validation-Sanitization-Encoding.md#v52-sanitization-and-sandboxing-requirements",
+              "section": "V5: Validation, Sanitization and Encoding Verification Requirements",
+              "version": "4"
+            },
+            "category": "security",
+            "technology": [
+              "python"
+            ],
+            "references": [
+              "https://owasp.org/Top10/A03_2021-Injection"
+            ],
+            "subcategory": [
+              "audit"
+            ],
+            "likelihood": "LOW",
+            "impact": "HIGH",
+            "confidence": "LOW",
+            "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+            "vulnerability_class": [
+              "Code Injection"
+            ],
+            "source": "https://semgrep.dev/r/python.lang.security.audit.eval-detected.eval-detected",
+            "shortlink": "https://sg.run/ZvrD"
+          },
+          "severity": "WARNING",
+          "fingerprint": "requires login",
+          "lines": "requires login",
+          "validation_state": "NO_VALIDATOR",
+          "engine_kind": "OSS"
+        }
+      }
+    },
+    {
+      "source": "semgrep",
+      "id": "PYTHON.LANG.SECURITY.AUDIT.SUBPROCESS-SHELL-TRUE.SUBPROCESS-SHELL-TRUE",
+      "rule_id": "PYTHON.LANG.SECURITY.AUDIT.SUBPROCESS-SHELL-TRUE.SUBPROCESS-SHELL-TRUE",
+      "title": "Found 'subprocess' function 'check_call' with 'shell=True'. This is dangerous because this call will spawn the command using a shell process. Doing so propagates current shell settings and variables, which makes it much easier for a malicious actor to execute commands. Use 'shell=False' instead.",
+      "summary": "Found 'subprocess' function 'check_call' with 'shell=True'. This is dangerous because this call will spawn the command using a shell process. Doing so propagates current shell settings and variables, which makes it much easier for a malicious actor to execute commands. Use 'shell=False' instead.",
+      "severity": "high",
+      "tool": "semgrep",
+      "message": "Found 'subprocess' function 'check_call' with 'shell=True'. This is dangerous because this call will spawn the command using a shell process. Doing so propagates current shell settings and variables, which makes it much easier for a malicious actor to execute commands. Use 'shell=False' instead.",
+      "location": "creater_pr.py:17",
+      "file": "creater_pr.py",
+      "line": 17,
+      "snippet": "requires login",
+      "category": "code",
+      "raw": {
+        "check_id": "python.lang.security.audit.subprocess-shell-true.subprocess-shell-true",
+        "path": "creater_pr.py",
+        "start": {
+          "line": 17,
+          "col": 38,
+          "offset": 432
+        },
+        "end": {
+          "line": 17,
+          "col": 42,
+          "offset": 436
+        },
+        "extra": {
+          "message": "Found 'subprocess' function 'check_call' with 'shell=True'. This is dangerous because this call will spawn the command using a shell process. Doing so propagates current shell settings and variables, which makes it much easier for a malicious actor to execute commands. Use 'shell=False' instead.",
+          "fix": "False",
+          "metadata": {
+            "source-rule-url": "https://bandit.readthedocs.io/en/latest/plugins/b602_subprocess_popen_with_shell_equals_true.html",
+            "owasp": [
+              "A01:2017 - Injection",
+              "A03:2021 - Injection",
+              "A05:2025 - Injection"
+            ],
+            "cwe": [
+              "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+            ],
+            "references": [
+              "https://stackoverflow.com/questions/3172470/actual-meaning-of-shell-true-in-subprocess",
+              "https://docs.python.org/3/library/subprocess.html"
+            ],
+            "category": "security",
+            "technology": [
+              "python"
+            ],
+            "cwe2022-top25": true,
+            "cwe2021-top25": true,
+            "subcategory": [
+              "secure default"
+            ],
+            "likelihood": "HIGH",
+            "impact": "LOW",
+            "confidence": "MEDIUM",
+            "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+            "vulnerability_class": [
+              "Command Injection"
+            ],
+            "source": "https://semgrep.dev/r/python.lang.security.audit.subprocess-shell-true.subprocess-shell-true",
+            "shortlink": "https://sg.run/J92w"
+          },
+          "severity": "ERROR",
+          "fingerprint": "requires login",
+          "lines": "requires login",
+          "validation_state": "NO_VALIDATOR",
+          "engine_kind": "OSS"
+        }
+      }
+    },
+    {
+      "source": "semgrep",
+      "id": "YAML.KUBERNETES.SECURITY.ALLOW-PRIVILEGE-ESCALATION.ALLOW-PRIVILEGE-ESCALATION",
+      "rule_id": "YAML.KUBERNETES.SECURITY.ALLOW-PRIVILEGE-ESCALATION.ALLOW-PRIVILEGE-ESCALATION",
+      "title": "In Kubernetes, each pod runs in its own isolated environment with its own set of security policies. However, certain container images may contain `setuid` or `setgid` binaries that could allow an attacker to perform privilege escalation and gain access to sensitive resources. To mitigate this risk, it's recommended to add a `securityContext` to the container in the pod, with the parameter `allowPrivilegeEscalation` set to `false`. This will prevent the container from running any privileged processes and limit the impact of any potential attacks. By adding the `allowPrivilegeEscalation` parameter to your the `securityContext`, you can help to ensure that your containerized applications are more secure and less vulnerable to privilege escalation attacks.",
+      "summary": "In Kubernetes, each pod runs in its own isolated environment with its own set of security policies. However, certain container images may contain `setuid` or `setgid` binaries that could allow an attacker to perform privilege escalation and gain access to sensitive resources. To mitigate this risk, it's recommended to add a `securityContext` to the container in the pod, with the parameter `allowPrivilegeEscalation` set to `false`. This will prevent the container from running any privileged processes and limit the impact of any potential attacks. By adding the `allowPrivilegeEscalation` parameter to your the `securityContext`, you can help to ensure that your containerized applications are more secure and less vulnerable to privilege escalation attacks.",
+      "severity": "medium",
+      "tool": "semgrep",
+      "message": "In Kubernetes, each pod runs in its own isolated environment with its own set of security policies. However, certain container images may contain `setuid` or `setgid` binaries that could allow an attacker to perform privilege escalation and gain access to sensitive resources. To mitigate this risk, it's recommended to add a `securityContext` to the container in the pod, with the parameter `allowPrivilegeEscalation` set to `false`. This will prevent the container from running any privileged processes and limit the impact of any potential attacks. By adding the `allowPrivilegeEscalation` parameter to your the `securityContext`, you can help to ensure that your containerized applications are more secure and less vulnerable to privilege escalation attacks.",
+      "location": "k8s/deployment.yaml:18",
+      "file": "k8s/deployment.yaml",
+      "line": 18,
+      "snippet": "requires login",
+      "category": "code",
+      "raw": {
+        "check_id": "yaml.kubernetes.security.allow-privilege-escalation.allow-privilege-escalation",
+        "path": "k8s/deployment.yaml",
+        "start": {
+          "line": 18,
+          "col": 9,
+          "offset": 265
+        },
+        "end": {
+          "line": 18,
+          "col": 24,
+          "offset": 280
+        },
+        "extra": {
+          "message": "In Kubernetes, each pod runs in its own isolated environment with its own set of security policies. However, certain container images may contain `setuid` or `setgid` binaries that could allow an attacker to perform privilege escalation and gain access to sensitive resources. To mitigate this risk, it's recommended to add a `securityContext` to the container in the pod, with the parameter `allowPrivilegeEscalation` set to `false`. This will prevent the container from running any privileged processes and limit the impact of any potential attacks. By adding the `allowPrivilegeEscalation` parameter to your the `securityContext`, you can help to ensure that your containerized applications are more secure and less vulnerable to privilege escalation attacks.",
+          "fix": "securityContext:\n          allowPrivilegeEscalation: false #",
+          "metadata": {
+            "cwe": [
+              "CWE-732: Incorrect Permission Assignment for Critical Resource"
+            ],
+            "owasp": [
+              "A05:2021 - Security Misconfiguration",
+              "A06:2017 - Security Misconfiguration",
+              "A02:2025 - Security Misconfiguration"
+            ],
+            "references": [
+              "https://kubernetes.io/docs/concepts/policy/pod-security-policy/#privilege-escalation",
+              "https://kubernetes.io/docs/tasks/configure-pod-container/security-context/",
+              "https://www.kernel.org/doc/Documentation/prctl/no_new_privs.txt",
+              "https://cheatsheetseries.owasp.org/cheatsheets/Docker_Security_Cheat_Sheet.html#rule-4-add-no-new-privileges-flag"
+            ],
+            "category": "security",
+            "technology": [
+              "kubernetes"
+            ],
+            "cwe2021-top25": true,
+            "subcategory": [
+              "vuln"
+            ],
+            "likelihood": "MEDIUM",
+            "impact": "MEDIUM",
+            "confidence": "MEDIUM",
+            "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+            "vulnerability_class": [
+              "Improper Authorization"
+            ],
+            "source": "https://semgrep.dev/r/yaml.kubernetes.security.allow-privilege-escalation.allow-privilege-escalation",
+            "shortlink": "https://sg.run/ljp6"
+          },
+          "severity": "WARNING",
+          "fingerprint": "requires login",
+          "lines": "requires login",
+          "validation_state": "NO_VALIDATOR",
+          "engine_kind": "OSS"
+        }
+      }
+    }
+  ],
+  "count": 4
+}

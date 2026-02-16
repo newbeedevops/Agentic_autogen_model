@@ -1,0 +1,7 @@
+Error: running test: load: loading policies: load: 6 errors occurred during loading:
+policy/terraform/security.rego:8: rego_parse_error: `if` keyword is required before rule body
+policy/terraform/security.rego:8: rego_parse_error: `contains` keyword is required for partial set rules
+policy/terraform/security.rego:14: rego_parse_error: `if` keyword is required before function body
+policy/terraform/security.rego:20: rego_parse_error: `if` keyword is required before function body
+policy/terraform/security.rego:26: rego_parse_error: `if` keyword is required before function body
+policy/terraform/security.rego:29: rego_parse_error: `if` keyword is required before rule body
