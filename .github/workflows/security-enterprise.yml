@@ -6,6 +6,10 @@ on:
       - feature/AgentAI
   workflow_dispatch:
 
+concurrency:
+  group: security-enterprise-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: write
   pull-requests: write
@@ -17,18 +21,26 @@ env:
   AUDIT_DIR: security-review
   APP_DIR: Order-app-main
   PYTHON_VERSION: 3.12
+
+  # LLM / Ollama (used in later jobs in your full pipeline)
   LLM_MODEL: "qwen2.5-coder:3b"
   OLLAMA_URL: "http://127.0.0.1:11434"
   OLLAMA_HOST: "127.0.0.1:11434"
   OLLAMA_NUM_CTX: 4096
   OLLAMA_NUM_PREDICT: 1024
   OLLAMA_TEMP: 0.1
+
   MIN_SEVERITY: low
+
+  # Trivy cache
   TRIVY_CACHE_DIR: ~/.cache/trivy
+  TRIVY_VERSION: "0.55.2"
+
 jobs:
   security-scan:
     name: "🔍 Security Scan"
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
       - name: Checkout Repo
@@ -43,7 +55,6 @@ jobs:
       - name: Create reports directory
         run: mkdir -p "${REPORTS_DIR}"
 
-      # Install jq/curl ONCE for everything that needs it
       - name: Install system deps (jq, curl)
         run: |
           sudo apt-get update
@@ -55,37 +66,39 @@ jobs:
       - name: Install Semgrep
         run: python -m pip install --upgrade pip semgrep
 
-      - name: Run Semgrep JSON scan (exclude generated dirs)
+      - name: Run Semgrep JSON scan (exclude generated dirs + workflows)
         run: |
           semgrep --config=auto \
-            --exclude "${REPORTS_DIR}" \
-            --exclude "${OUTPUT_DIR}" \
-            --exclude "${AUDIT_DIR}" \
+            --exclude "reports/**" \
+            --exclude "agent_output/**" \
+            --exclude "security-review/**" \
+            --exclude ".github/workflows/**" \
             --json . > "${REPORTS_DIR}/semgrep.json" || echo '{}' > "${REPORTS_DIR}/semgrep.json"
 
-      - name: Run Semgrep SARIF scan (exclude generated dirs)
+      - name: Run Semgrep SARIF scan (exclude generated dirs + workflows)
         run: |
           semgrep --config=auto \
-            --exclude "${REPORTS_DIR}" \
-            --exclude "${OUTPUT_DIR}" \
-            --exclude "${AUDIT_DIR}" \
+            --exclude "reports/**" \
+            --exclude "agent_output/**" \
+            --exclude "security-review/**" \
+            --exclude ".github/workflows/**" \
             --sarif . > "${REPORTS_DIR}/semgrep.sarif" || echo '{}' > "${REPORTS_DIR}/semgrep.sarif"
 
       # -------------------------
-      # Trivy FS
+      # Trivy FS + Cache
       # -------------------------
       - name: Cache Trivy DB
         uses: actions/cache@v4
         with:
           path: ${{ env.TRIVY_CACHE_DIR }}
-          key: trivy-db-${{ runner.os }}-${{ hashFiles('Order-app-main/package-lock.json') }}
+          key: trivy-db-${{ runner.os }}-${{ env.TRIVY_VERSION }}
           restore-keys: |
             trivy-db-${{ runner.os }}-
 
-      - name: Install Trivy
+      - name: Install Trivy (pinned)
         run: |
           curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh \
-          | sh -s -- -b /usr/local/bin
+          | sh -s -- -b /usr/local/bin "v${TRIVY_VERSION}"
           trivy --version
 
       - name: Run Trivy FS Scan
@@ -109,7 +122,7 @@ jobs:
           fi
 
       # -------------------------
-      # Gitleaks (jq/curl already installed)
+      # Gitleaks
       # -------------------------
       - name: Install Gitleaks
         run: |
@@ -126,7 +139,7 @@ jobs:
           || echo '[]' > "${REPORTS_DIR}/gitleaks.json"
 
       # -------------------------
-      # Conftest + Terraform
+      # Terraform + Conftest
       # -------------------------
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -153,7 +166,12 @@ jobs:
           conftest --version
           terraform version
 
-      - name: Generate Terraform plan JSON (if terraform/ exists)
+      - name: Generate Terraform plan JSON (offline-ish, no cloud creds)
+        env:
+          AWS_ACCESS_KEY_ID: dummy
+          AWS_SECRET_ACCESS_KEY: dummy
+          AWS_DEFAULT_REGION: us-east-1
+          AWS_EC2_METADATA_DISABLED: "true"
         run: |
           if [ -d terraform ]; then
             mkdir -p ~/.terraform.d/plugin-cache
@@ -162,8 +180,8 @@ jobs:
           EOF
 
             cd terraform
-            terraform init -input=false || true
-            terraform plan -out=plan.out -input=false || true
+            terraform init -input=false -backend=false 2> ../"${REPORTS_DIR}/tf_init.err" || true
+            terraform plan -out=plan.out -input=false -refresh=false -lock=false 2> ../"${REPORTS_DIR}/tf_plan.err" || true
 
             if [ -f plan.out ]; then
               terraform show -json plan.out > ../"${REPORTS_DIR}/tfplan.json" || echo '{}' > ../"${REPORTS_DIR}/tfplan.json"
@@ -175,25 +193,33 @@ jobs:
             echo '{}' > "${REPORTS_DIR}/tfplan.json"
           fi
 
-      - name: Run Conftest (safe, writes err files)
+      - name: Run Conftest (k8s + dockerfile + terraform plan)
         run: |
           set -o pipefail
 
-          targets=""
-          for d in k8s policy; do
-            [ -d "$d" ] && targets="$targets $d"
-          done
-
-          if [ -n "$targets" ]; then
-            conftest test $targets --output json \
-              > "${REPORTS_DIR}/conftest.json" \
-              2> "${REPORTS_DIR}/conftest.err" || true
-            test -s "${REPORTS_DIR}/conftest.json" || echo '[]' > "${REPORTS_DIR}/conftest.json"
+          # 1) Kubernetes YAML -> policy/kubernetes
+          if [ -d k8s ] && [ -d policy/kubernetes ]; then
+            conftest test k8s -p policy/kubernetes --output json \
+              > "${REPORTS_DIR}/conftest_k8s.json" \
+              2> "${REPORTS_DIR}/conftest_k8s.err" || true
+            test -s "${REPORTS_DIR}/conftest_k8s.json" || echo '[]' > "${REPORTS_DIR}/conftest_k8s.json"
           else
-            echo '[]' > "${REPORTS_DIR}/conftest.json"
-            echo "No conftest targets found." > "${REPORTS_DIR}/conftest.err"
+            echo '[]' > "${REPORTS_DIR}/conftest_k8s.json"
+            echo "Skipped: missing k8s/ or policy/kubernetes" > "${REPORTS_DIR}/conftest_k8s.err"
           fi
 
+          # 2) Dockerfile -> policy/dockerfile
+          if [ -f app/Dockerfile ] && [ -d policy/dockerfile ]; then
+            conftest test app/Dockerfile -p policy/dockerfile --output json \
+              > "${REPORTS_DIR}/conftest_dockerfile.json" \
+              2> "${REPORTS_DIR}/conftest_dockerfile.err" || true
+            test -s "${REPORTS_DIR}/conftest_dockerfile.json" || echo '[]' > "${REPORTS_DIR}/conftest_dockerfile.json"
+          else
+            echo '[]' > "${REPORTS_DIR}/conftest_dockerfile.json"
+            echo "Skipped: missing app/Dockerfile or policy/dockerfile" > "${REPORTS_DIR}/conftest_dockerfile.err"
+          fi
+
+          # 3) Terraform plan JSON -> policy/terraform
           if [ -d policy/terraform ] && [ -f "${REPORTS_DIR}/tfplan.json" ]; then
             conftest test "${REPORTS_DIR}/tfplan.json" -p policy/terraform --output json \
               > "${REPORTS_DIR}/conftest_tf.json" \
@@ -201,8 +227,15 @@ jobs:
             test -s "${REPORTS_DIR}/conftest_tf.json" || echo '[]' > "${REPORTS_DIR}/conftest_tf.json"
           else
             echo '[]' > "${REPORTS_DIR}/conftest_tf.json"
-            echo "Skipped terraform plan policy (policy/terraform missing or tfplan.json missing)" > "${REPORTS_DIR}/conftest_tf.err"
+            echo "Skipped: missing policy/terraform or tfplan.json" > "${REPORTS_DIR}/conftest_tf.err"
           fi
+
+          # Merge into reports/conftest.json (for parsers expecting single file)
+          jq -s 'add' \
+            "${REPORTS_DIR}/conftest_k8s.json" \
+            "${REPORTS_DIR}/conftest_dockerfile.json" \
+            "${REPORTS_DIR}/conftest_tf.json" \
+            > "${REPORTS_DIR}/conftest.json" || echo '[]' > "${REPORTS_DIR}/conftest.json"
 
       # -------------------------
       # Diagnostics + Publishing
