@@ -1,7 +1,5 @@
-app\Dockerfile
-k8s\deployment.yaml
-terraform\main.tf
+PATCHES EMITTED:
+(none)
 
-Dockerfile: ADD→COPY . → /app
-Dockerfile: Ensured USER appuser (non-root)
-Terraform: replaced world-open CIDR with allowed CIDR
+NOTES:
+(none)
