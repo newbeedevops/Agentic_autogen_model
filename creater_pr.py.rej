@@ -1,0 +1,19 @@
+diff a/creater_pr.py b/creater_pr.py	(rejected hunks)
+@@ -14,7 +14,7 @@
+     # Ensure the user is logged in
+     if not user.is_authenticated:
+         return HttpResponseForbidden("User must be authenticated")
+-    subprocess.check_call(["git", "pull"])
++    subprocess.check_call(["git", "pull"], shell=False)
+ 
+     # Create a new pull request
+     pr = PR.objects.create(
+@@ -24,7 +24,7 @@
+     # Ensure the user is logged in
+     if not user.is_authenticated:
+         return HttpResponseForbidden("User must be authenticated")
+-    subprocess.check_call(["git", "push"])
++    subprocess.check_call(["git", "push"], shell=False)
+ 
+     # Return a success response
+     return JsonResponse({"message": "Pull request created successfully"})

@@ -1,0 +1,6 @@
+--- app/insecure_eval.py
++++ app/insecure_eval.py
+@@ -1,3 +1,4 @@
++import ast
+ requires login
++eval(ast.literal_eval(input("Enter expression to evaluate: ")))
