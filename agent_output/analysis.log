@@ -1,0 +1,47 @@
+/home/runner/work/Agentic_autogen_model/Agentic_autogen_model/main.py:180: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  "generated_at": datetime.utcnow().isoformat() + "Z",
+
+======================================================================
+   🛡️  DevSecOps Agentic AI Security Scanner
+======================================================================
+   📅 2026-02-16 17:45:46
+   🤖 LLM: qwen2.5-coder:3b @ http://127.0.0.1:11434
+======================================================================
+
+   ⏳ Scanning...
+[collector] Parsed 4 findings from semgrep (semgrep.json)
+[collector] Parsed 2 findings from gitleaks (gitleaks.json)
+   ✅ targets.json written with 5 file(s)
+   ⏳ Evaluating policy...
+[policy_gate] Evaluating 6 findings...
+[policy_gate] Policy: min_severity=low, max_total=None
+[policy_gate] Decision: FAIL - Found medium (>= low) from semgrep at Order-app-main/public/index.html:44
+[policy_gate] Found 6 violation(s)
+   ⏳ Analyzing (LLM layer)...
+[autogen] LLM enabled? cfg=False env=False -> effective=True
+[autogen] ✓ Ollama healthy: model=qwen2.5-coder:3b
+[llm_bridge] model=qwen2.5-coder:3b url=http://127.0.0.1:11434 num_predict=1024 ctx=4096
+[llm_bridge] Attempt 1/3 for warmup
+[autogen] Warmup call done.
+[llm_bridge] model=qwen2.5-coder:3b url=http://127.0.0.1:11434 num_predict=1024 ctx=4096
+[llm_bridge] Attempt 1/3 for triage
+[llm_bridge] model=qwen2.5-coder:3b url=http://127.0.0.1:11434 num_predict=1024 ctx=4096
+[llm_bridge] Attempt 1/3 for policy_advisor
+[llm_bridge] model=qwen2.5-coder:3b url=http://127.0.0.1:11434 num_predict=1024 ctx=4096
+[llm_bridge] Attempt 1/3 for reporter
+[autogen] Analyzing findings with LLM: semgrep=4 trivy_fs=0
+[llm_bridge] model=qwen2.5-coder:3b url=http://127.0.0.1:11434 num_predict=1024 ctx=4096
+[llm_bridge] Attempt 1/3 for semgrep_fixer
+[llm_bridge] model=qwen2.5-coder:3b url=http://127.0.0.1:11434 num_predict=1024 ctx=4096
+[llm_bridge] Attempt 1/3 for semgrep_fixer
+[llm_bridge] model=qwen2.5-coder:3b url=http://127.0.0.1:11434 num_predict=1024 ctx=4096
+[llm_bridge] Attempt 1/3 for semgrep_fixer
+[llm_bridge] model=qwen2.5-coder:3b url=http://127.0.0.1:11434 num_predict=1024 ctx=4096
+[llm_bridge] Attempt 1/3 for semgrep_fixer
+[autogen] Wrote: agent_output/agentic_summary.md, agent_output/llm_recommendations.md, agent_output/llm_report.json
+[autogen] Returning llm_report: semgrep=4 trivy_fs=0
+[main] Skipping Fixer — generate_fixes=False status=fail
+[reporter] Generating artifacts...
+[reporter] Wrote metrics.json
+[reporter] Wrote 2 recommendation file(s)
+[reporter] Done.

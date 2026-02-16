@@ -1,7 +1,6 @@
-app\Dockerfile
-k8s\deployment.yaml
-terraform\main.tf
+PATCHES EMITTED:
+(none)
 
-Dockerfile: ADD→COPY . → /app
-Dockerfile: Ensured USER appuser (non-root)
-Terraform: replaced world-open CIDR with allowed CIDR
+NOTES:
+Dockerfile: SKIP (not in targets) app/Dockerfile
+Terraform: SKIP (not in targets) terraform/main.tf

@@ -1,52 +1,125 @@
 {
   "open_pr": true,
   "status": "fail",
-  "reason": "Found high (>= high) from semgrep at app/main.py:12",
+  "reason": "Found medium (>= low) from semgrep at Order-app-main/public/index.html:44",
   "stats": {
-    "total": 3,
+    "total": 6,
     "by_severity": {
       "low": 0,
-      "medium": 1,
-      "high": 2,
+      "medium": 3,
+      "high": 3,
       "critical": 0
     },
     "by_category": {
-      "code": 1,
-      "infra": 2,
+      "code": 4,
+      "infra": 0,
       "image": 0,
       "policy": 0,
-      "secrets": 0,
+      "secrets": 2,
       "webapp": 0
     },
     "by_tool": {
-      "semgrep": 1,
-      "trivy_fs": 2
+      "semgrep": 4,
+      "gitleaks": 2
     },
     "worst_severity": "high",
-    "weighted_score": 8
+    "weighted_score": 15
   },
   "violations": [
     {
       "tool": "semgrep",
-      "severity": "high",
+      "severity": "medium",
       "category": "code",
-      "location": "app/main.py:12",
-      "id": "TEST001",
-      "message": "Hardcoded password detected"
+      "location": "Order-app-main/public/index.html:44",
+      "id": "HTML.SECURITY.AUDIT.MISSING-INTEGRITY.MISSING-INTEGRITY",
+      "message": "This tag is missing an 'integrity' subresource integrity attribute. The 'integrity' attribute allows for the browser to verify that externally hosted files (for example from a CDN) are delivered without unexpected manipulation. Without this attribute, if an attacker can modify the externally hosted resource, this could lead to XSS and other types of attacks. To prevent this, include the base64-encoded cryptographic hash of the resource (file) you’re telling the browser to fetch in the 'integrity' attribute for all externally hosted files."
     },
     {
-      "tool": "trivy_fs",
+      "tool": "semgrep",
+      "severity": "medium",
+      "category": "code",
+      "location": "app/insecure_eval.py:2",
+      "id": "PYTHON.LANG.SECURITY.AUDIT.EVAL-DETECTED.EVAL-DETECTED",
+      "message": "Detected the use of eval(). eval() can be dangerous if used to evaluate dynamic content. If this content can be input from outside the program, this may be a code injection vulnerability. Ensure evaluated content is not definable by external sources."
+    },
+    {
+      "tool": "semgrep",
       "severity": "high",
-      "category": "infra",
-      "location": "Dockerfile",
-      "id": "CVE-2025-0001",
-      "message": "Example OpenSSL issue"
+      "category": "code",
+      "location": "creater_pr.py:17",
+      "id": "PYTHON.LANG.SECURITY.AUDIT.SUBPROCESS-SHELL-TRUE.SUBPROCESS-SHELL-TRUE",
+      "message": "Found 'subprocess' function 'check_call' with 'shell=True'. This is dangerous because this call will spawn the command using a shell process. Doing so propagates current shell settings and variables, which makes it much easier for a malicious actor to execute commands. Use 'shell=False' instead."
+    },
+    {
+      "tool": "semgrep",
+      "severity": "medium",
+      "category": "code",
+      "location": "k8s/deployment.yaml:18",
+      "id": "YAML.KUBERNETES.SECURITY.ALLOW-PRIVILEGE-ESCALATION.ALLOW-PRIVILEGE-ESCALATION",
+      "message": "In Kubernetes, each pod runs in its own isolated environment with its own set of security policies. However, certain container images may contain `setuid` or `setgid` binaries that could allow an attacker to perform privilege escalation and gain access to sensitive resources. To mitigate this risk, it's recommended to add a `securityContext` to the container in the pod, with the parameter `allowPrivilegeEscalation` set to `false`. This will prevent the container from running any privileged processes and limit the impact of any potential attacks. By adding the `allowPrivilegeEscalation` parameter to your the `securityContext`, you can help to ensure that your containerized applications are more secure and less vulnerable to privilege escalation attacks."
+    },
+    {
+      "tool": "gitleaks",
+      "severity": "high",
+      "category": "secrets",
+      "location": "README.md:47",
+      "id": null,
+      "message": ""
+    },
+    {
+      "tool": "gitleaks",
+      "severity": "high",
+      "category": "secrets",
+      "location": "README.md:574",
+      "id": null,
+      "message": ""
     }
   ],
   "remediation": {
-    "llm_report_path": "agent_output\\llm_report.json",
+    "llm_report_path": null,
+    "llm_report": {
+      "semgrep": [
+        {
+          "file": "Order-app-main/public/index.html",
+          "line": 44,
+          "rule_id": "HTML.SECURITY.AUDIT.MISSING-INTEGRITY.MISSING-INTEGRITY",
+          "severity": "medium",
+          "suggestion": "### Risk Explanation\nThe `integrity` attribute is missing from an `<script>` tag, which can lead to XSS attacks if the script is modified by an attacker. Including this attribute ensures that the browser verifies the integrity of the script before executing it.\n\n### Minimal Unified Diff\n\n```diff\n- <script src=\"https://cdn.example.com/script.js\"></script>\n+ <script src=\"https://cdn.example.com/script.js\" integrity=\"sha384-...\"></script>\n```\n\nReplace `sha384-...` with the actual base64-encoded hash of the script file.\n\n### Follow-Up Tasks\n\n1. **Testing**: \n   - Run automated tests to ensure that the application continues to function correctly after adding the `integrity` attribute.\n   - Manually test the application in different browsers and environments to confirm that the integrity check is working as expected.\n\n2. **Configuration**:\n   - Ensure that all external resources used by the application have their hashes calculated and included in the `integrity` attributes.\n   - Regularly update these hashes when the content of the files changes to maintain security.",
+          "used_fallback": false
+        },
+        {
+          "file": "app/insecure_eval.py",
+          "line": 2,
+          "rule_id": "PYTHON.LANG.SECURITY.AUDIT.EVAL-DETECTED.EVAL-DETECTED",
+          "severity": "medium",
+          "suggestion": "### Risk Explanation\nThe use of `eval()` can lead to code injection vulnerabilities if it is used to evaluate dynamic content that can be input from outside the program. This could allow an attacker to execute arbitrary code, which poses a significant security risk.\n\n### Minimal Unified Diff\n\n```diff\n- requires login\n+ # Requires login\n```\n\n### Follow-Up (Tests/Config)\n\n1. **Unit Tests**: Add unit tests to verify that `eval()` is not used in any part of the application. This can be done by mocking inputs and ensuring that no code execution occurs.\n   ```python\n   import unittest\n   from unittest.mock import patch\n\n   class TestEvalUsage(unittest.TestCase):\n       @patch('app.insecure_eval.eval')\n       def test_eval_not_used(self, mock_eval):\n           # Mock the eval function to do nothing\n           mock_eval.return_value = None\n           # Call a function that might use eval (e.g., some_function())\n           some_function()\n           # Assert that eval was not called\n           self.assertFalse(mock_eval.called)\n   ```\n\n2. **Security Scanning**: Regularly scan the application for any usage of `eval()` using tools like Semgrep or Bandit to ensure compliance with security best practices.\n3. **Documentation**: Update the application's documentation to clearly state that `eval()` should not be used and provide guidance on alternative methods for handling dynamic content safely.",
+          "used_fallback": false
+        },
+        {
+          "file": "creater_pr.py",
+          "line": 17,
+          "rule_id": "PYTHON.LANG.SECURITY.AUDIT.SUBPROCESS-SHELL-TRUE.SUBPROCESS-SHELL-TRUE",
+          "severity": "high",
+          "suggestion": "### Risk Explanation\nUsing `subprocess.check_call` with `shell=True` allows execution of arbitrary shell commands, which can lead to command injection attacks if the input is not properly sanitized.\n\n### Minimal Unified Diff\n\n```diff\n- subprocess.check_call(['ls', '-l'])\n+ subprocess.check_call('ls -l', shell=False)\n```\n\n### Follow-Up (Tests/Config)\n\n1. **Unit Tests**: Add unit tests that verify the behavior of `subprocess` functions with and without `shell=True`. Ensure that using `shell=False` prevents command injection.\n2. **Security Configuration**: Update any security configurations or policies to explicitly disallow use of `shell=True` in subprocess calls, especially for critical operations like running commands on remote servers.\n3. **Documentation**: Update the application's documentation to include best practices for handling subprocess calls and emphasize the importance of using `shell=False`.",
+          "used_fallback": false
+        },
+        {
+          "file": "k8s/deployment.yaml",
+          "line": 18,
+          "rule_id": "YAML.KUBERNETES.SECURITY.ALLOW-PRIVILEGE-ESCALATION.ALLOW-PRIVILEGE-ESCALATION",
+          "severity": "medium",
+          "suggestion": "### Risk Explanation\nThe Kubernetes deployment YAML file contains a container with `allowPrivilegeEscalation` set to `true`. This allows the container to run processes with elevated privileges, which can lead to privilege escalation attacks and potential access to sensitive resources.\n\n### Minimal Unified Diff\n```diff\n-      allowPrivilegeEscalation: true\n+      allowPrivilegeEscalation: false\n```\n\n### Follow-Up (Tests/Config)\n1. **Unit Tests**: Add unit tests to verify that the `allowPrivilegeEscalation` parameter is correctly set to `false`.\n2. **Integration Tests**: Run integration tests with different container images to ensure that the `allowPrivilegeEscalation` setting does not allow for privilege escalation.\n3. **Security Scanning**: Use security scanning tools to check for any other potential vulnerabilities in the deployment configuration.\n4. **Documentation Update**: Update the documentation to include best practices for securing Kubernetes deployments, including the use of `securityContext` parameters like `allowPrivilegeEscalation`.",
+          "used_fallback": false
+        }
+      ],
+      "trivy_fs": [],
+      "notes": []
+    },
     "changed": false,
     "files": [],
-    "notes": []
+    "notes": [
+      "Dockerfile: SKIP (not in targets) app/Dockerfile",
+      "Terraform: SKIP (not in targets) terraform/main.tf"
+    ]
   }
 }

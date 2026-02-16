@@ -1,0 +1,14 @@
+Error: running test: load: loading policies: load: 13 errors occurred during loading:
+policy/dockerfile/security.rego:4: rego_parse_error: `if` keyword is required before rule body
+policy/dockerfile/security.rego:4: rego_parse_error: `contains` keyword is required for partial set rules
+policy/dockerfile/security.rego:11: rego_parse_error: `if` keyword is required before rule body
+policy/dockerfile/security.rego:11: rego_parse_error: `contains` keyword is required for partial set rules
+policy/dockerfile/security.rego:16: rego_parse_error: `if` keyword is required before rule body
+policy/dockerfile/security.rego:22: rego_parse_error: `if` keyword is required before rule body
+policy/dockerfile/security.rego:22: rego_parse_error: `contains` keyword is required for partial set rules
+policy/kubernetes/security.rego:6: rego_parse_error: `if` keyword is required before rule body
+policy/kubernetes/security.rego:6: rego_parse_error: `contains` keyword is required for partial set rules
+policy/kubernetes/security.rego:12: rego_parse_error: `if` keyword is required before rule body
+policy/kubernetes/security.rego:12: rego_parse_error: `contains` keyword is required for partial set rules
+policy/kubernetes/security.rego:20: rego_parse_error: `if` keyword is required before rule body
+policy/kubernetes/security.rego:20: rego_parse_error: `contains` keyword is required for partial set rules
