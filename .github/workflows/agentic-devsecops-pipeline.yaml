@@ -3,9 +3,9 @@ name: DevSecOps Agentic AI Pipeline
 
 on:
   push:
-    branches: [main, test-v-branch]
+    branches: [feature/testingai]
   pull_request:
-    branches: [main, test-v-branch]
+    branches: [feature/testingai]
   workflow_dispatch:
 
 env:
@@ -1216,9 +1216,9 @@ jobs:
 
 # on:
 #   push:
-#     branches: [main, test-v-branch]
+#     branches: [feature/testingai]
 #   pull_request:
-#     branches: [main, test-v-branch]
+#     branches: [feature/testingai]
 #   workflow_dispatch:
 
 # env:
