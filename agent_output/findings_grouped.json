@@ -1,33 +1,508 @@
 {
   "semgrep": [
     {
-      "file": "app/main.py",
-      "line": 12,
-      "severity": "high",
-      "rule_id": "TEST001",
-      "message": "Hardcoded password detected",
-      "snippet": ""
+      "tool": "semgrep",
+      "severity": "low",
+      "file": "Order-app-main/public/index.html",
+      "line": 44,
+      "rule_id": "html.security.audit.missing-integrity.missing-integrity",
+      "message": "This tag is missing an 'integrity' subresource integrity attribute. The 'integrity' attribute allows for the browser to verify that externally hosted files (for example from a CDN) are delivered without unexpected manipulation. Without this attribute, if an attacker can modify the externally hosted resource, this could lead to XSS and other types of attacks. To prevent this, include the base64-encoded cryptographic hash of the resource (file) you\u2019re telling the browser to fetch in the 'integrity' attribute for all externally hosted files.",
+      "category": "code"
+    },
+    {
+      "tool": "semgrep",
+      "severity": "low",
+      "file": "app/insecure_eval.py",
+      "line": 2,
+      "rule_id": "python.lang.security.audit.eval-detected.eval-detected",
+      "message": "Detected the use of eval(). eval() can be dangerous if used to evaluate dynamic content. If this content can be input from outside the program, this may be a code injection vulnerability. Ensure evaluated content is not definable by external sources.",
+      "category": "code"
+    },
+    {
+      "tool": "semgrep",
+      "severity": "low",
+      "file": "k8s/deployment.yaml",
+      "line": 18,
+      "rule_id": "yaml.kubernetes.security.allow-privilege-escalation.allow-privilege-escalation",
+      "message": "In Kubernetes, each pod runs in its own isolated environment with its own set of security policies. However, certain container images may contain `setuid` or `setgid` binaries that could allow an attacker to perform privilege escalation and gain access to sensitive resources. To mitigate this risk, it's recommended to add a `securityContext` to the container in the pod, with the parameter `allowPrivilegeEscalation` set to `false`. This will prevent the container from running any privileged processes and limit the impact of any potential attacks. By adding the `allowPrivilegeEscalation` parameter to your the `securityContext`, you can help to ensure that your containerized applications are more secure and less vulnerable to privilege escalation attacks.",
+      "category": "code"
     }
   ],
   "trivy_fs": [
     {
-      "file": "Dockerfile",
-      "id": "CVE-2025-0001",
-      "severity": "high",
-      "summary": "Example OpenSSL issue",
-      "snippet": ""
+      "tool": "trivy_fs",
+      "severity": "medium",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2023-26364",
+      "message": "css-tools: Improper Input Validation causes Denial of Service via Regular Expression",
+      "category": "infra"
     },
     {
-      "file": "Dockerfile",
-      "id": "AVD-TRIVY-0001",
+      "tool": "trivy_fs",
       "severity": "medium",
-      "summary": "Root user in Dockerfile",
-      "snippet": ""
+      "file": "package-lock.json",
+      "rule_id": "CVE-2023-48631",
+      "message": "css-tools: regular expression denial of service (ReDoS) when parsing CSS",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "medium",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2025-27789",
+      "message": "Babel has inefficient RegExp complexity in generated code with .replace when transpiling named capturing groups",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "medium",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2025-27789",
+      "message": "Babel has inefficient RegExp complexity in generated code with .replace when transpiling named capturing groups",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "medium",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2025-27789",
+      "message": "Babel has inefficient RegExp complexity in generated code with .replace when transpiling named capturing groups",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "critical",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2023-45133",
+      "message": "babel: arbitrary code execution",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "high",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2026-22029",
+      "message": "@remix-run/router: react-router: React Router vulnerable to XSS via Open Redirects",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "high",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2024-45590",
+      "message": "body-parser: Denial of Service Vulnerability in body-parser",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "low",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2025-5889",
+      "message": "brace-expansion: juliangruber brace-expansion index.js expand redos",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "low",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2025-5889",
+      "message": "brace-expansion: juliangruber brace-expansion index.js expand redos",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "high",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2024-4068",
+      "message": "braces: fails to limit the number of characters it can handle",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "low",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2024-47764",
+      "message": "cookie: cookie accepts cookie name, path, and domain with out of bounds characters",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "high",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2024-21538",
+      "message": "cross-spawn: regular expression denial of service",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "medium",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2024-33883",
+      "message": "The ejs (aka Embedded JavaScript templates) package before 3.1.10 for  ...",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "medium",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2024-29041",
+      "message": "express: cause malformed URLs to be evaluated",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "low",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2024-43796",
+      "message": "express: Improper Input Handling in Express Redirects",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "medium",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2023-26159",
+      "message": "follow-redirects: Improper Input Validation due to the improper handling of URLs by the url.parse()",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "medium",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2024-28849",
+      "message": "follow-redirects: Possible credential leak",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "critical",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2025-7783",
+      "message": "form-data: Unsafe random function in form-data",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "high",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2024-21536",
+      "message": "http-proxy-middleware: Denial of Service",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "medium",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2025-32996",
+      "message": "http-proxy-middleware: Always-Incorrect Control Flow Implementation in http-proxy-middleware",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "medium",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2025-32997",
+      "message": "http-proxy-middleware: Improper Check for Unusual or Exceptional Conditions in http-proxy-middleware",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "medium",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2025-64718",
+      "message": "js-yaml: js-yaml prototype pollution in merge",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "medium",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2025-64718",
+      "message": "js-yaml: js-yaml prototype pollution in merge",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "high",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2022-46175",
+      "message": "json5: Prototype Pollution in JSON5 via Parse Method",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "high",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2022-46175",
+      "message": "json5: Prototype Pollution in JSON5 via Parse Method",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "medium",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2025-13465",
+      "message": "lodash: prototype pollution in _.unset and _.omit functions",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "medium",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2024-4067",
+      "message": "micromatch: vulnerable to Regular Expression Denial of Service",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "medium",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2024-55565",
+      "message": "nanoid: nanoid mishandles non-integer values",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "high",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2025-12816",
+      "message": "node-forge: node-forge: Interpretation conflict vulnerability allows bypassing cryptographic verifications",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "high",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2025-66031",
+      "message": "node-forge: node-forge ASN.1 Unbounded Recursion",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "medium",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2025-66030",
+      "message": "node-forge: node-forge: Integer Overflow allows OID-based security bypass",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "high",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2021-3803",
+      "message": "nodejs-nth-check: inefficient regular expression complexity",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "low",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2025-7339",
+      "message": "on-headers: on-headers vulnerable to http response header manipulation",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "high",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2024-45296",
+      "message": "path-to-regexp: Backtracking regular expressions cause ReDoS",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "high",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2024-52798",
+      "message": "path-to-regexp: path-to-regexp Unpatched `path-to-regexp` ReDoS in 0.1.x",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "medium",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2023-44270",
+      "message": "PostCSS: Improper input validation in PostCSS",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "medium",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2023-44270",
+      "message": "PostCSS: Improper input validation in PostCSS",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "high",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2025-15284",
+      "message": "qs: qs: Denial of Service via improper input validation in array parsing",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "low",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2026-2391",
+      "message": "qs: qs's arrayLimit bypass in comma parsing allows denial of service",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "medium",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2025-68470",
+      "message": "react-router: React Router unexpected external redirect",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "high",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2024-47068",
+      "message": "rollup: DOM Clobbering Gadget found in rollup bundled scripts that leads to XSS",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "high",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2022-25883",
+      "message": "nodejs-semver: Regular expression denial of service",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "high",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2022-25883",
+      "message": "nodejs-semver: Regular expression denial of service",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "low",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2024-43799",
+      "message": "send: Code Execution Vulnerability in Send Library",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "medium",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2024-11831",
+      "message": "npm-serialize-javascript: Cross-site Scripting (XSS) in serialize-javascript",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "low",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2024-43800",
+      "message": "serve-static: Improper Sanitization in serve-static",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "medium",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2023-26136",
+      "message": "tough-cookie: prototype pollution in cookie memstore",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "critical",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2023-28154",
+      "message": "webpack: avoid cross-realm objects",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "medium",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2024-43788",
+      "message": "webpack: DOM Clobbering vulnerability in AutoPublicPathRuntimeModule",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "low",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2025-68157",
+      "message": "webpack: webpack buildHttp HttpUriPlugin allowedUris bypass via HTTP redirects",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "low",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2025-68458",
+      "message": "webpack: webpack buildHttp: allowedUris allow-list bypass via URL userinfo (@) leading to build-time SSRF behavior",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "high",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2024-29180",
+      "message": "webpack-dev-middleware: lack of URL validation may lead to file leak",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "medium",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2025-30359",
+      "message": "webpack-dev-server: webpack-dev-server information exposure",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "medium",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2025-30360",
+      "message": "webpack-dev-server: webpack-dev-server information exposure",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "medium",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2023-26115",
+      "message": "word-wrap: ReDoS",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "high",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2024-37890",
+      "message": "nodejs-ws: denial of service when handling a request with many HTTP headers",
+      "category": "infra"
+    },
+    {
+      "tool": "trivy_fs",
+      "severity": "high",
+      "file": "package-lock.json",
+      "rule_id": "CVE-2024-37890",
+      "message": "nodejs-ws: denial of service when handling a request with many HTTP headers",
+      "category": "infra"
     }
   ],
-  "trivy_image": [],
-  "tfsec": [],
-  "gitleaks": [],
-  "conftest": [],
-  "zap": []
+  "_meta": {
+    "total": 61,
+    "by_severity": {
+      "low": 13,
+      "medium": 26,
+      "critical": 3,
+      "high": 19
+    },
+    "worst_severity": "critical",
+    "parse_errors": 0
+  }
 }
