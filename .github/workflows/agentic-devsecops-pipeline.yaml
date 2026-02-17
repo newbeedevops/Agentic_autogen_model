@@ -1,11 +1,11 @@
-########################### Dummy trigger
+###########################
 name: DevSecOps Agentic AI Pipeline
 
 on:
   push:
-    branches: [feature/testingai]
+    branches: [main, test-v-branch]
   pull_request:
-    branches: [feature/testingai]
+    branches: [main, test-v-branch]
   workflow_dispatch:
 
 env:
@@ -1216,9 +1216,9 @@ jobs:
 
 # on:
 #   push:
-#     branches: [feature/testingai]
+#     branches: [main, test-v-branch]
 #   pull_request:
-#     branches: [feature/testingai]
+#     branches: [main, test-v-branch]
 #   workflow_dispatch:
 
 # env:
