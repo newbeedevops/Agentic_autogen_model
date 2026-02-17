@@ -3,7 +3,7 @@ name:  Deploy DevSecOps Chatbot
 
 on:
   push:
-    branches: [main, test-v-branch]
+    branches: [main, feature/testingai]
     paths:
       - 'devsecops-chatbot/**'
       - '.github/workflows/deploy-chatbot.yaml'
