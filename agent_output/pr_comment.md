@@ -1,20 +1,12 @@
 ## 🛡️ Security Scan — ❌ Fail
 
-**Reason:** Found high (>= high) from semgrep at app/main.py:12
+**Total Findings:** 61
+**Worst Severity:** critical
 
-### Summary
-- **Total findings:** 3
-- **Worst severity:** high
-- 🔴 Critical: 0 | 🟠 High: 2 | 🟡 Medium: 1 | 🟢 Low: 0
+### Severity Breakdown
+- 🔴 Critical: 3
+- 🟠 High: 19
+- 🟡 Medium: 26
+- 🟢 Low: 13
 
-### Top Recommendations
-
-**Semgrep:**
-- [HIGH] `app/main.py:12` (TEST001)
-
-**Trivy-FS:**
-- [HIGH] `Dockerfile` (CVE-2025-0001)
-- [MEDIUM] `Dockerfile` (AVD-TRIVY-0001)
-
----
-_See `llm_recommendations_summary.md` for full details._
+_See metrics.json for full details._
