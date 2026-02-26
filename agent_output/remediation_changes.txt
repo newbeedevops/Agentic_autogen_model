@@ -1,7 +1,11 @@
-app\Dockerfile
-k8s\deployment.yaml
-terraform\main.tf
+PATCHES EMITTED:
+agent_output/patches/llm_Order-app-main_public_index.html.patch
+agent_output/patches/llm_app_insecure_eval.py.patch
+agent_output/patches/llm_creater_pr.py.patch
+agent_output/patches/llm_k8s_deployment.yaml.patch
 
-Dockerfile: ADD→COPY . → /app
-Dockerfile: Ensured USER appuser (non-root)
-Terraform: replaced world-open CIDR with allowed CIDR
+NOTES:
+LLM: diff saved for Order-app-main/public/index.html
+LLM: diff saved for app/insecure_eval.py
+LLM: diff saved for creater_pr.py
+LLM: diff saved for k8s/deployment.yaml

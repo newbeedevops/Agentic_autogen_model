@@ -1,0 +1,9 @@
+--- a/k8s/deployment.yaml
++++ b/k8s/deployment.yaml
+@@ -15,6 +15,7 @@
+   containers:
+     - name: my-container
+       image: my-image
++      securityContext:
++        allowPrivilegeEscalation: false
+   restartPolicy: Always

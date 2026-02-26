@@ -1,0 +1,9 @@
+--- creater_pr.py
++++ creater_pr.py
+@@ -14,7 +14,7 @@
+     # Ensure the user is logged in before proceeding
+     if not user.is_authenticated:
+         return HttpResponseForbidden("User must be authenticated to create a pull request.")
+-    subprocess.check_call(['git', 'push', '-u', remote_name, branch_name])
++    subprocess.check_call(['git', 'push', '-u', remote_name, branch_name], shell=False)
+     return HttpResponse("Pull request created successfully.")

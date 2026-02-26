@@ -1,0 +1,7 @@
+--- Order-app-main/public/index.html
++++ Order-app-main/public/index.html
+@@ -43,7 +43,7 @@
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-PsUwYjQoTvZp/6Jv6tEJqz+gkxI2KfRtMmCnWcXr7yHbVhD9B1a0e5P7GdL" crossorigin="anonymous"></script>
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3Qg2z+6jXv9wTcHxVtq7lJbWnOeRmIhKfFkYsGp5L1r0oA1MjUaPdC" crossorigin="anonymous">
+ </head>
+ <body>
