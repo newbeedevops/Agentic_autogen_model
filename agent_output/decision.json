@@ -1,52 +1,226 @@
 {
-  "open_pr": true,
   "status": "fail",
-  "reason": "Found high (>= high) from semgrep at app/main.py:12",
+  "open_pr": true,
+  "reason": "61 finding(s) >= low",
   "stats": {
-    "total": 3,
+    "total": 61,
     "by_severity": {
-      "low": 0,
-      "medium": 1,
-      "high": 2,
-      "critical": 0
+      "critical": 3,
+      "high": 19,
+      "medium": 26,
+      "low": 13
     },
-    "by_category": {
-      "code": 1,
-      "infra": 2,
-      "image": 0,
-      "policy": 0,
-      "secrets": 0,
-      "webapp": 0
-    },
-    "by_tool": {
-      "semgrep": 1,
-      "trivy_fs": 2
-    },
-    "worst_severity": "high",
-    "weighted_score": 8
+    "worst_severity": "critical"
   },
   "violations": [
     {
-      "tool": "semgrep",
-      "severity": "high",
-      "category": "code",
-      "location": "app/main.py:12",
-      "id": "TEST001",
-      "message": "Hardcoded password detected"
+      "severity": "critical",
+      "tool": "trivy_fs",
+      "category": "infra",
+      "location": "package-lock.json",
+      "id": "CVE-2023-45133",
+      "message": "babel: arbitrary code execution"
     },
     {
+      "severity": "critical",
       "tool": "trivy_fs",
-      "severity": "high",
       "category": "infra",
-      "location": "Dockerfile",
-      "id": "CVE-2025-0001",
-      "message": "Example OpenSSL issue"
+      "location": "package-lock.json",
+      "id": "CVE-2025-7783",
+      "message": "form-data: Unsafe random function in form-data"
+    },
+    {
+      "severity": "critical",
+      "tool": "trivy_fs",
+      "category": "infra",
+      "location": "package-lock.json",
+      "id": "CVE-2023-28154",
+      "message": "webpack: avoid cross-realm objects"
+    },
+    {
+      "severity": "high",
+      "tool": "trivy_fs",
+      "category": "infra",
+      "location": "package-lock.json",
+      "id": "CVE-2026-22029",
+      "message": "@remix-run/router: react-router: React Router vulnerable to XSS via Open Redirects"
+    },
+    {
+      "severity": "high",
+      "tool": "trivy_fs",
+      "category": "infra",
+      "location": "package-lock.json",
+      "id": "CVE-2024-45590",
+      "message": "body-parser: Denial of Service Vulnerability in body-parser"
+    },
+    {
+      "severity": "high",
+      "tool": "trivy_fs",
+      "category": "infra",
+      "location": "package-lock.json",
+      "id": "CVE-2024-4068",
+      "message": "braces: fails to limit the number of characters it can handle"
+    },
+    {
+      "severity": "high",
+      "tool": "trivy_fs",
+      "category": "infra",
+      "location": "package-lock.json",
+      "id": "CVE-2024-21538",
+      "message": "cross-spawn: regular expression denial of service"
+    },
+    {
+      "severity": "high",
+      "tool": "trivy_fs",
+      "category": "infra",
+      "location": "package-lock.json",
+      "id": "CVE-2024-21536",
+      "message": "http-proxy-middleware: Denial of Service"
+    },
+    {
+      "severity": "high",
+      "tool": "trivy_fs",
+      "category": "infra",
+      "location": "package-lock.json",
+      "id": "CVE-2022-46175",
+      "message": "json5: Prototype Pollution in JSON5 via Parse Method"
+    },
+    {
+      "severity": "high",
+      "tool": "trivy_fs",
+      "category": "infra",
+      "location": "package-lock.json",
+      "id": "CVE-2022-46175",
+      "message": "json5: Prototype Pollution in JSON5 via Parse Method"
+    },
+    {
+      "severity": "high",
+      "tool": "trivy_fs",
+      "category": "infra",
+      "location": "package-lock.json",
+      "id": "CVE-2025-12816",
+      "message": "node-forge: node-forge: Interpretation conflict vulnerability allows bypassing cryptographic verifications"
+    },
+    {
+      "severity": "high",
+      "tool": "trivy_fs",
+      "category": "infra",
+      "location": "package-lock.json",
+      "id": "CVE-2025-66031",
+      "message": "node-forge: node-forge ASN.1 Unbounded Recursion"
+    },
+    {
+      "severity": "high",
+      "tool": "trivy_fs",
+      "category": "infra",
+      "location": "package-lock.json",
+      "id": "CVE-2021-3803",
+      "message": "nodejs-nth-check: inefficient regular expression complexity"
+    },
+    {
+      "severity": "high",
+      "tool": "trivy_fs",
+      "category": "infra",
+      "location": "package-lock.json",
+      "id": "CVE-2024-45296",
+      "message": "path-to-regexp: Backtracking regular expressions cause ReDoS"
+    },
+    {
+      "severity": "high",
+      "tool": "trivy_fs",
+      "category": "infra",
+      "location": "package-lock.json",
+      "id": "CVE-2024-52798",
+      "message": "path-to-regexp: path-to-regexp Unpatched `path-to-regexp` ReDoS in 0.1.x"
+    },
+    {
+      "severity": "high",
+      "tool": "trivy_fs",
+      "category": "infra",
+      "location": "package-lock.json",
+      "id": "CVE-2025-15284",
+      "message": "qs: qs: Denial of Service via improper input validation in array parsing"
+    },
+    {
+      "severity": "high",
+      "tool": "trivy_fs",
+      "category": "infra",
+      "location": "package-lock.json",
+      "id": "CVE-2024-47068",
+      "message": "rollup: DOM Clobbering Gadget found in rollup bundled scripts that leads to XSS"
+    },
+    {
+      "severity": "high",
+      "tool": "trivy_fs",
+      "category": "infra",
+      "location": "package-lock.json",
+      "id": "CVE-2022-25883",
+      "message": "nodejs-semver: Regular expression denial of service"
+    },
+    {
+      "severity": "high",
+      "tool": "trivy_fs",
+      "category": "infra",
+      "location": "package-lock.json",
+      "id": "CVE-2022-25883",
+      "message": "nodejs-semver: Regular expression denial of service"
+    },
+    {
+      "severity": "high",
+      "tool": "trivy_fs",
+      "category": "infra",
+      "location": "package-lock.json",
+      "id": "CVE-2024-29180",
+      "message": "webpack-dev-middleware: lack of URL validation may lead to file leak"
+    },
+    {
+      "severity": "high",
+      "tool": "trivy_fs",
+      "category": "infra",
+      "location": "package-lock.json",
+      "id": "CVE-2024-37890",
+      "message": "nodejs-ws: denial of service when handling a request with many HTTP headers"
+    },
+    {
+      "severity": "high",
+      "tool": "trivy_fs",
+      "category": "infra",
+      "location": "package-lock.json",
+      "id": "CVE-2024-37890",
+      "message": "nodejs-ws: denial of service when handling a request with many HTTP headers"
+    },
+    {
+      "severity": "medium",
+      "tool": "trivy_fs",
+      "category": "infra",
+      "location": "package-lock.json",
+      "id": "CVE-2023-26364",
+      "message": "css-tools: Improper Input Validation causes Denial of Service via Regular Expression"
+    },
+    {
+      "severity": "medium",
+      "tool": "trivy_fs",
+      "category": "infra",
+      "location": "package-lock.json",
+      "id": "CVE-2023-48631",
+      "message": "css-tools: regular expression denial of service (ReDoS) when parsing CSS"
+    },
+    {
+      "severity": "medium",
+      "tool": "trivy_fs",
+      "category": "infra",
+      "location": "package-lock.json",
+      "id": "CVE-2025-27789",
+      "message": "Babel has inefficient RegExp complexity in generated code with .replace when transpiling named capturing groups"
     }
   ],
-  "remediation": {
-    "llm_report_path": "agent_output\\llm_report.json",
-    "changed": false,
-    "files": [],
-    "notes": []
-  }
+  "policy": {
+    "min_severity": "low",
+    "max_total": null,
+    "allow_tools": [],
+    "deny_tools": []
+  },
+  "evaluated_at": "2026-02-17T01:00:52.496467Z",
+  "decision_hash": "sha256:6804c6122049abb63cb0ebf4b6895c414f64669cb0c540faf4821af26146452e",
+  "remediation": {}
 }
